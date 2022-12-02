@@ -1,0 +1,3 @@
+game: hypercorn app_game --reload --debug --bind app.local.gd:$PORT --access-logfile - --error-logfile - --log-level DEBUG
+user: hypercorn app_users --reload --debug --bind app.local.gd:$PORT --access-logfile - --error-logfile - --log-level DEBUG
+leaderboard: hypercorn app_leaderboard --reload --debug --bind app.local.gd:$PORT --access-logfile - --error-logfile - --log-level DEBUG
