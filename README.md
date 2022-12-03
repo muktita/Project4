@@ -10,8 +10,11 @@
 ##### copy 'wordleauth' into your nginx directory (/etc/nginx/sites-enabled/)
 ##### restart nginx `sudo service nginx restart`
 ##### navigate to project directory
-##### `python3 setupDB.py`  *use `setupDB.py -p` to populate the database*
-##### `foreman start --formation game=3,user=1,leaderboard=1,redis=1`
+##### to setup file structures for litefs database replication, run `python3 setup.py` 
+###### *Make sure that redis is not running.  you can check with the command `pgrep redis`*
+##### run `foreman start` before populating datbases
+##### setup the databases by running `python3 setupDB.py`  *use `setupDB.py -p` to populate the database*
+###### *Note it resets the redis db as well*
 
 ---
 
@@ -36,6 +39,13 @@
 ### **List a Specific Game in Progress**
 ##### `http GET http://tuffix-vm/game/{game_id} user-id:<user-id> username:<username> -a <username>:<password>`
 
+### **Get Leaderboard**
+##### `http GET http://tuffix-vm/leaderboard`
+
+### **Update Leaderboard**
+##### *Tests that you can update the leaderboard via only internal calls and not external (via tuffix-vm)*
+##### `http POST http://tuffix-vm/leaderboard/update username=<username> score=<score>` *SHOULD RETURN 404*
+##### `http POST http://localhost:5200/leaderboard/update username=<username> score=<score>` *SHOULD RETURN 200 OK WITH JSON OUTPUT*
 
 
 
