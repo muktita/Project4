@@ -1,0 +1,15 @@
+mount-dir: "./var/secondary1/mount"
+
+data-dir: "./var/secondary1/data"
+
+debug: true
+
+http:
+  addr: ":20203"
+
+static:
+  primary: false
+
+  hostname: "tuffix-vm"
+
+  advertise-url: "http://tuffix-vm:20202"
