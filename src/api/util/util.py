@@ -5,10 +5,27 @@ import json
 import sqlite3, sqlalchemy
 from api.util.Classes import Game
 from redis import Redis
+from itertools import cycle
+import toml
 
 
 CORRECT_WORD_BANK = []
 VALID_WORD_BANK = []
+
+
+def _load_toml_dbs(fname:str):
+    '''
+    reads and loads toml file to get db replica data
+    '''
+    data = toml.load(fname)
+    return data
+
+# load all replicas into itertools.cycle object to iterate over
+GAME_REPLICAS = cycle(_load_toml_dbs('./config/config.toml')['DATABASE']['URL_GAMES_REPLICAS'])
+USER_REPLICAS = cycle(_load_toml_dbs('./config/config.toml')['DATABASE']['URL_USERS_REPLICAS'])
+
+
+
 
 def _read_jsonfile(fname: str) -> list:
     '''returns list of words from the json file'''
@@ -17,20 +34,23 @@ def _read_jsonfile(fname: str) -> list:
     
     return list(data)
 
+
 async def _get_db(process:str):
     '''
     gets the database given a current process (users or games)
     '''
 
     db = getattr(g, f'_{process}_db', None)
+    
     if not db:
         if process == 'users':
-            db = g._users_db = databases.Database(current_app.config['DATABASE']['URL_USERS'])
+            db = g._users_db = databases.Database(current_app.config['DATABASE']['URL_USERS_PRIMARY'])
         elif process == 'games':
-            db = g._games_db = databases.Database(current_app.config['DATABASE']['URL_GAMES'])
+            db = g._games_db = databases.Database(current_app.config['DATABASE']['URL_GAMES_PRIMARY'])
         await db.connect()
         
     return db
+
 
 def _get_redis() -> Redis:
     '''

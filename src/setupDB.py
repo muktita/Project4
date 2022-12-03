@@ -9,22 +9,22 @@ import os
 BASE = './database/'
 
 def setupdb(name:str):
-    dbname = BASE + f'{name}.db'
+    dbname = BASE +'dbs/' + f'{name}.db'
     print('setting up db: ', dbname)
     con = sqlite3.connect(dbname)
     cur = con.cursor()
-    with open(BASE + f'schema_{name}.sql', 'r') as file:
+    with open(BASE +'scripts/' + f'schema_{name}.sql', 'r') as file:
         data = file.read()
         cur.executescript(data)
     con.close()
     print('successfully setup db: ', dbname)
 
 def populatedb(name:str):
-    dbname = BASE + f'{name}.db'
+    dbname = BASE +'dbs/' + f'{name}.db'
     print('populating up db: ', dbname)
     con = sqlite3.connect(dbname)
     cur = con.cursor()
-    with open(BASE + f'populatedb_{name}.sql', 'r') as file:
+    with open(BASE +'scripts/' + f'populatedb_{name}.sql', 'r') as file:
         data = file.read()
         cur.executescript(data)
     con.close()
@@ -41,8 +41,8 @@ if __name__ == '__main__':
     setupdb('users')
 
     #deletes the leaderboard redis db on disk to reset it.
-    if os.path.exists(BASE+'leaderboard.rdb'):
-        os.remove(BASE+'leaderboard.rdb')
+    if os.path.exists(BASE + 'dbs/' + 'leaderboard.rdb'):
+        os.remove(BASE + 'dbs/' + 'leaderboard.rdb')
 
     if parser.p:
         populatedb('games')
