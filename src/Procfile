@@ -1,4 +1,9 @@
-game: hypercorn app_game --reload --debug --bind app.local.gd:$PORT --access-logfile - --error-logfile - --log-level DEBUG
+game1: hypercorn app_game --reload --debug --bind app.local.gd:$PORT --access-logfile - --error-logfile - --log-level DEBUG
+game2: hypercorn app_game --reload --debug --bind app.local.gd:$PORT --access-logfile - --error-logfile - --log-level DEBUG
+game3: hypercorn app_game --reload --debug --bind app.local.gd:$PORT --access-logfile - --error-logfile - --log-level DEBUG
 user: hypercorn app_users --reload --debug --bind app.local.gd:$PORT --access-logfile - --error-logfile - --log-level DEBUG
 leaderboard: hypercorn app_leaderboard --reload --debug --bind app.local.gd:$PORT --access-logfile - --error-logfile - --log-level DEBUG
 redis: redis-server ./config/redis.conf
+primary: ./database/litefs -config ./config/primary.yml
+secondary: ./database/litefs -config ./config/secondary.yml
+tertiary: ./database/litefs -config ./config/tertiary.yml

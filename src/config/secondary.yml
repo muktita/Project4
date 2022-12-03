@@ -1,0 +1,10 @@
+mount-dir: "./database/dbs/secondary/mount"
+data-dir: "./database/dbs/secondary/data"
+
+http:
+  addr: ":20203"
+
+static:
+  primary: false
+  hostname: "tuffix-vm"
+  advertise-url: "http://tuffix-vm:20202"

@@ -12,19 +12,7 @@ import toml
 CORRECT_WORD_BANK = []
 VALID_WORD_BANK = []
 
-
-def _load_toml_dbs(fname:str):
-    '''
-    reads and loads toml file to get db replica data
-    '''
-    data = toml.load(fname)
-    return data
-
-# load all replicas into itertools.cycle object to iterate over
-GAME_REPLICAS = cycle(_load_toml_dbs('./config/config.toml')['DATABASE']['URL_GAMES_REPLICAS'])
-USER_REPLICAS = cycle(_load_toml_dbs('./config/config.toml')['DATABASE']['URL_USERS_REPLICAS'])
-
-
+REPLICAS = cycle(['primary', 'secondary', 'tertiary'])  #creates a cycle itertool object to cycle over different db replicas
 
 
 def _read_jsonfile(fname: str) -> list:
@@ -37,19 +25,30 @@ def _read_jsonfile(fname: str) -> list:
 
 async def _get_db(process:str):
     '''
-    gets the database given a current process (users or games)
+    gets the database given a current process (users or games) and returns the primary db for writing and the replica to read from.
     '''
 
-    db = getattr(g, f'_{process}_db', None)
-    
-    if not db:
+    nextreplica = next(REPLICAS)
+
+    primary = getattr(g, f'_primary_{process}_db', None)
+    replica = getattr(g, f'_{nextreplica}_{process}_db', None)
+
+    if not primary:
         if process == 'users':
-            db = g._users_db = databases.Database(current_app.config['DATABASE']['URL_USERS_PRIMARY'])
+            primary = g._users_db = databases.Database(current_app.config['DATABASE']['URL_USERS_PRIMARY'])
         elif process == 'games':
-            db = g._games_db = databases.Database(current_app.config['DATABASE']['URL_GAMES_PRIMARY'])
-        await db.connect()
-        
-    return db
+            primary = g._games_db = databases.Database(current_app.config['DATABASE']['URL_GAMES_PRIMARY'])
+        await primary.connect()
+    
+    #if replica doesn't exist, creates proper replica connection
+    if not replica:
+        key = f'_{nextreplica}_{process}_db'
+        db = databases.Database(f'sqlite+aiosqlite:///database/dbs/{nextreplica}/mount/{process}.db')
+        setattr(g, f'_{nextreplica}_{process}_db', db)
+        replica = getattr(g, f'_{nextreplica}_{process}_db', None)
+        await replica.connect()
+   
+    return primary, replica
 
 
 def _get_redis() -> Redis:

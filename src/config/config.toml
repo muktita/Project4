@@ -1,9 +1,6 @@
 [DATABASE]
-URL_USERS_PRIMARY = 'sqlite+aiosqlite:///database/dbs/users.db'
-URL_USERS_REPLICAS = ['sqlite+aiosqlite:///database/dbs/users/primary/mount/users.db', 'sqlite+aiosqlite:///database/dbs/users/secondary1/mount/users.db', 'sqlite+aiosqlite:///database/dbs/users/secondary2/mount/users.db']
-URL_GAMES_PRIMARY = 'sqlite+aiosqlite:///database/dbs/games.db'
-URL_GAMES_REPLICAS = ['sqlite+aiosqlite:///database/dbs/games/primary/mount/games.db', 'sqlite+aiosqlite:///database/dbs/games/secondary1/mount/games.db', 'sqlite+aiosqlite:///database/dbs/games/secondary2/mount/games.db']
-
+URL_USERS_PRIMARY = 'sqlite+aiosqlite:///database/dbs/primary/mount/users.db'
+URL_GAMES_PRIMARY = 'sqlite+aiosqlite:///database/dbs/primary/mount/games.db'
 
 [REDIS]
 HOST = 'localhost'

@@ -1,0 +1,12 @@
+mount-dir: "./database/dbs/primary/mount"
+data-dir: "./database/dbs/primary/data"
+
+#exec: "hypercorn books --reload --debug --bind books.local.gd:$PORT --access-logfile - --error-logfile - --log-level DEBUG"
+
+http:
+  addr: ":20202"
+
+static:
+  primary: true
+  hostname: "tuffix-vm"
+  advertise-url: "http://tuffix-vm:20202"

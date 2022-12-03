@@ -25,13 +25,13 @@ async def create(headers:User):
     username = request.authorization.username
 
     #gets user and validates userid
-    db = await _get_db()
+    primary, replica = await _get_db()
    
     #generates a random word and creates a new game entry in the database
     random_word = random.choice(CORRECT_WORD_BANK)
     game_id = str(uuid.uuid1())
     query = f'INSERT INTO games(game_id, user_id, username, word) VALUES("{game_id}", "{user_id}", "{username}", "{random_word}")'
-    id = await db.execute(query)    #id = gameid
+    id = await primary.execute(query)    #id = gameid
     
     if id == -1:
         return abort(500)
@@ -48,10 +48,10 @@ async def get_all_games(headers: User):
 
     username = request.authorization.username
 
-    db = await _get_db()
+    primary, replica = await _get_db()
     sql = f'SELECT game_id FROM games WHERE user_id LIKE "{user_id}" AND finished=0 AND username LIKE "{username}"'
     logger.info('/game/list SQL: ' + sql)
-    games = await db.fetch_all(sql)
+    games = await replica.fetch_all(sql)
 
     #converts the games found into a list of ints for the game_id
     games = [g.game_id for g in games]
@@ -73,10 +73,10 @@ async def get_game(id:str, headers:User):
    
 
     #gets db and searches for game
-    db = await _get_db()
+    primary, replica = await _get_db()
     sql = f'SELECT * FROM games WHERE game_id="{game_id}" AND user_id="{user_id}" AND username="{username}"'
     logger.info('/game/' + str(game_id) + ' get game SQL: ' + sql)
-    game = await db.fetch_one(sql)
+    game = await replica.fetch_one(sql)
 
     if not game:
         return abort(401, 'Game Not Found')
@@ -84,7 +84,7 @@ async def get_game(id:str, headers:User):
     #gets guesses from table
     sql = f'SELECT guess, guess_num FROM guesses WHERE game_id="{game_id}" ORDER BY guess_num ASC'
     logger.info('/game/' + str(game_id) + ' get guesses SQL: ' + sql)
-    guesses = await db.fetch_all(sql)
+    guesses = await replica.fetch_all(sql)
     if guesses:
         guesses = [g.guess for g in guesses]
     else:
@@ -110,12 +110,12 @@ async def make_guess(data:Guess, headers:User):
 
     username = request.authorization.username
 
-    db = await _get_db()
+    primary, replica = await _get_db()
     
     #gets the status of the game and returns if the game is not found
     sql = f'SELECT * FROM games WHERE game_id="{game_id}" AND user_id="{user_id}" AND finished=0 AND username="{username}"'
     logger.info('/game/guess get game SQL: ' + sql)
-    game = await db.fetch_one(sql)
+    game = await replica.fetch_one(sql)
 
     if game is None:
         return abort(401, "No game found")
@@ -130,11 +130,11 @@ async def make_guess(data:Guess, headers:User):
         #updates the number of guesses remaining
         sql = f'UPDATE games SET guesses_rem={guesses_rem}, finished={finished} WHERE game_id="{game_id}"'
         logger.info('/game/guess update game state SQL: ' + sql)
-        r = await db.execute(sql)
+        r = await primary.execute(sql)
         #adds the guess to the guesses database.
         sql = f'INSERT INTO guesses(game_id, guess, guess_num) VALUES("{game_id}", "{guess}", {guess_num})'
         logger.info('/game/guess add guess SQL: ' + sql)
-        g_id = await db.execute(sql)
+        g_id = await primary.execute(sql)
         if r == -1:
             return abort(500)   #error with updating table
 

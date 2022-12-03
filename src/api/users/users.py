@@ -27,9 +27,9 @@ async def register(data:UserAuth):
     #aborts if the password or username is too short
     if len(form['password']) < 5 or len(form['username']) < 5:
         abort(406, 'invalid parameter length')
-    db = await _get_db()
+    primary, replica = await _get_db()
     try:
-        res = await db.execute(
+        res = await primary.execute(
             """
             INSERT INTO users(user_id, username, password)
             VALUES(:user_id,:username,:password)
@@ -49,10 +49,11 @@ async def check():
         username = request.authorization.username
         password = request.authorization.password
         
-    db = await _get_db()
+    primary, replica = await _get_db()
+
     sql = f'SELECT * FROM users WHERE username LIKE "{username}" AND password LIKE "{password}"'
     logger.info('/checkPassword SQL: ' + sql)
-    users = await db.fetch_one(sql)
+    users = await replica.fetch_one(sql)
     
     #if user is not None, that means a valid user was found with same credentials
     if users is not None:
