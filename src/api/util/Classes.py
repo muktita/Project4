@@ -22,3 +22,8 @@ class Game:
 class UserAuth:
     username: str
     password: str
+
+@dataclasses.dataclass
+class LeaderboardGame:
+    username: str
+    score: int

@@ -10,10 +10,8 @@
 ##### copy 'wordleauth' into your nginx directory (/etc/nginx/sites-enabled/)
 ##### restart nginx `sudo service nginx restart`
 ##### navigate to project directory
-##### `cd src/database`
 ##### `python3 setupDB.py`  *use `setupDB.py -p` to populate the database*
-##### `cd ..`
-##### `foreman start --formation game=3,user=1`
+##### `foreman start --formation game=3,user=1,leaderboard=1,redis=1`
 
 ---
 

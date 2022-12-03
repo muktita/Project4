@@ -4,6 +4,7 @@ import databases
 import json
 import sqlite3, sqlalchemy
 from api.util.Classes import Game
+from redis import Redis
 
 
 CORRECT_WORD_BANK = []
@@ -29,6 +30,21 @@ async def _get_db(process:str):
             db = g._games_db = databases.Database(current_app.config['DATABASE']['URL_GAMES'])
         await db.connect()
         
+    return db
+
+def _get_redis() -> Redis:
+    '''
+    Connects to and returns redis db object.
+    '''
+    db = getattr(g, '_redis_db', None)
+    if db is not None:
+        try:
+            db.ping()
+        except (redis.exceptions.ConnectionError, Exception) as e:
+            logger.logging(e)
+            db = None
+    if not db:
+        db = g._redis_db = Redis(host=current_app.config['REDIS']['HOST'], port=current_app.config['REDIS']['PORT'], decode_responses=True)
     return db
 
 
