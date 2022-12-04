@@ -1,6 +1,6 @@
 [DATABASE]
-URL_USERS_PRIMARY = 'sqlite+aiosqlite:///database/dbs/primary/mount/users.db'
-URL_GAMES_PRIMARY = 'sqlite+aiosqlite:///database/dbs/primary/mount/games.db'
+URL_USERS = 'sqlite+aiosqlite:///database/dbs/users/users.db'
+URL_GAMES_PRIMARY = 'sqlite+aiosqlite:///database/dbs/games/primary/mount/games.db'
 
 [REDIS]
 HOST = 'localhost'

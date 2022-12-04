@@ -27,23 +27,25 @@ async def _get_db(process:str):
     '''
     gets the database given a current process (users or games) and returns the primary db for writing and the replica to read from.
     '''
+    nextreplica = ''
+    if process == 'games':
+        nextreplica = next(REPLICAS)
 
-    nextreplica = next(REPLICAS)
 
     primary = getattr(g, f'_primary_{process}_db', None)
     replica = getattr(g, f'_{nextreplica}_{process}_db', None)
 
     if not primary:
         if process == 'users':
-            primary = g._users_db = databases.Database(current_app.config['DATABASE']['URL_USERS_PRIMARY'])
+            primary = g._users_db = databases.Database(current_app.config['DATABASE']['URL_USERS'])
         elif process == 'games':
             primary = g._games_db = databases.Database(current_app.config['DATABASE']['URL_GAMES_PRIMARY'])
         await primary.connect()
     
-    #if replica doesn't exist, creates proper replica connection
-    if not replica:
+    #if replica doesn't exist and games is requesting db, creates proper replica connection
+    if not replica and process == 'games':
         key = f'_{nextreplica}_{process}_db'
-        db = databases.Database(f'sqlite+aiosqlite:///database/dbs/{nextreplica}/mount/{process}.db')
+        db = databases.Database(f'sqlite+aiosqlite:///database/dbs/games/{nextreplica}/mount/{process}.db')
         setattr(g, f'_{nextreplica}_{process}_db', db)
         replica = getattr(g, f'_{nextreplica}_{process}_db', None)
         await replica.connect()

@@ -9,23 +9,36 @@ FOLDERS = ['primary', 'secondary', 'tertiary']
 
 
 if __name__ == '__main__':
+    #makes base path
     if not os.path.exists(BASE):
         os.mkdir(BASE)
-        print('created dir: ', BASE)
+        print('created dir: ' + BASE)
+
+    #makes games for database folder
+    gamespath = BASE + 'games/'
+    if not os.path.exists(gamespath):
+        os.mkdir(gamespath)
+        print('created dir: ', gamespath)
 
     #removes existing folders
-    print('removing old directories if they exists...')
+    print('removing old directories if they exist...')
     for folder in FOLDERS:
-        shutil.rmtree(BASE + folder, ignore_errors=True)
+        shutil.rmtree(gamespath + folder, ignore_errors=True)
     
     #adds folders
     for folder in FOLDERS:
-        os.mkdir(BASE + folder)
-        print('created dir: ', BASE + folder)
-        os.mkdir(BASE + folder + '/mount')
-        print('created dir: ', BASE + folder + '/mount')
-        os.mkdir(BASE + folder + '/data')
-        print('created dir: ', BASE + folder + '/data')
+        os.mkdir(gamespath + folder)
+        print('created dir: ', gamespath + folder)
+        os.mkdir(gamespath + folder + '/mount')
+        print('created dir: ', gamespath + folder + '/mount')
+        os.mkdir(gamespath + folder + '/data')
+        print('created dir: ', gamespath + folder + '/data')
+
+    #adds the users database folder
+    userspath = BASE + 'users/'
+    if not os.path.exists(userspath):
+        os.mkdir(userspath)
+        print('created dir: ', userspath)
 
     #adds redis directory to save to disk.
     try:

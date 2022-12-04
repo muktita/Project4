@@ -12,8 +12,10 @@ import logging
 app_users = Blueprint('app_users', __name__)
 logger = logging.getLogger('users')
 
-def _get_db():
-    return _getdb('users')
+async def _get_db():
+    db, _ = await _getdb('users')
+    return db
+
 
 @app_users.route("/register", methods=['POST'])
 @validate_request(UserAuth)
@@ -27,9 +29,9 @@ async def register(data:UserAuth):
     #aborts if the password or username is too short
     if len(form['password']) < 5 or len(form['username']) < 5:
         abort(406, 'invalid parameter length')
-    primary, replica = await _get_db()
+    db = await _get_db()
     try:
-        res = await primary.execute(
+        res = await db.execute(
             """
             INSERT INTO users(user_id, username, password)
             VALUES(:user_id,:username,:password)
@@ -49,11 +51,11 @@ async def check():
         username = request.authorization.username
         password = request.authorization.password
         
-    primary, replica = await _get_db()
+    db = await _get_db()
 
     sql = f'SELECT * FROM users WHERE username LIKE "{username}" AND password LIKE "{password}"'
     logger.info('/checkPassword SQL: ' + sql)
-    users = await replica.fetch_one(sql)
+    users = await db.fetch_one(sql)
     
     #if user is not None, that means a valid user was found with same credentials
     if users is not None:

@@ -1,5 +1,5 @@
-mount-dir: "./database/dbs/tertiary/mount"
-data-dir: "./database/dbs/tertiary/data"
+mount-dir: "./database/dbs/games/tertiary/mount"
+data-dir: "./database/dbs/games/tertiary/data"
 
 http:
   addr: ":20204"

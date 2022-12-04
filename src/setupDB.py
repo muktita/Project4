@@ -7,10 +7,11 @@ import os
 #view populatedb.sql to see the added user and games.
 
 BASE = './database/'
-PRIMARY_BASE = 'dbs/primary/mount/'
+PRIMARY_BASE = 'dbs/games/primary/mount/'
 
 def setupdb(name:str):
-    dbname = BASE + PRIMARY_BASE + f'{name}.db'
+    dbpath = PRIMARY_BASE if name == 'games' else 'dbs/users/'
+    dbname = BASE + dbpath + f'{name}.db'
     print('setting up db: ', dbname)
     con = sqlite3.connect(dbname)
     cur = con.cursor()
@@ -21,7 +22,8 @@ def setupdb(name:str):
     print('successfully setup db: ', dbname)
 
 def populatedb(name:str):
-    dbname = BASE + PRIMARY_BASE + f'{name}.db'
+    dbpath = PRIMARY_BASE if name == 'games' else 'dbs/users/'
+    dbname = BASE + dbpath + f'{name}.db'
     print('populating up db: ', dbname)
     con = sqlite3.connect(dbname)
     cur = con.cursor()

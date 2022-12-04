@@ -1,5 +1,5 @@
-mount-dir: "./database/dbs/primary/mount"
-data-dir: "./database/dbs/primary/data"
+mount-dir: "./database/dbs/games/primary/mount"
+data-dir: "./database/dbs/games/primary/data"
 
 #exec: "hypercorn books --reload --debug --bind books.local.gd:$PORT --access-logfile - --error-logfile - --log-level DEBUG"
 

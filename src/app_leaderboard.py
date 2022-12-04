@@ -1,8 +1,6 @@
 from venv import create
 from quart_schema import QuartSchema
 from quart import Quart, g, request
-from api.game.game import app_create
-from api.users.users import app_users
 from api.leaderboard.leaderboard import app_leaderboard
 import toml
 import logging
