@@ -7,14 +7,25 @@
 ##### Jarrod Leong
 
 ## **Initializing Database & Start Service:**
-##### copy 'src/nginx.config' into your nginx directory (/etc/nginx/sites-enabled/)
-##### restart nginx `sudo service nginx restart`
-##### navigate to project directory
-##### to setup file structures for litefs database replication, run `python3 setup.py`  *if setup.py fails, manually delete the folder /database/dbs* 
-###### *Make sure you have redis installed and it's not running.  you can check with the command `pgrep redis`*
-##### run `foreman start` before populating datbases
-##### setup the databases by running `python3 setupDB.py`  *use `setupDB.py -p` to populate the database.  Note it resets the redis db as well*
-###### *if the project fails to start, delete the dbs folder and run setup again. Check again that redis is not running.*
+ • copy <b>'src/nginx.config'</b> into your nginx directory (/etc/nginx/sites-enabled/)
+ <br>
+ • restart nginx `sudo service nginx restart`
+ <br>
+ <br>
+ • <b>navigate to project directory</b>
+ <br>
+ <br>
+ • to setup file structures for litefs database replication, run `python3 setup.py`, *if setup.py fails, manually delete the folder /database/dbs*
+ <br>
+ <br>
+ • *Make sure you have redis installed and it's not running.  you can check with the command `pgrep redis`*
+ <br>
+ <br>
+• run `foreman start` before populating datbases
+<br>
+ <br>
+ • setup the databases by running `python3 setupDB.py`  *use `setupDB.py -p` to populate the database.  Note it resets the redis db as well*
+###### *Note: if the project fails to start, delete the dbs folder and run setup again. Check again that redis is not running.*
 
 ---
 
@@ -46,16 +57,3 @@
 ##### *Tests that you can update the leaderboard via only internal calls and not external (via tuffix-vm)*
 ##### `http POST http://tuffix-vm/leaderboard/update username=<username> score=<score>` *SHOULD RETURN 404*
 ##### `http POST http://localhost:5200/leaderboard/update username=<username> score=<score>` *SHOULD RETURN 200 OK WITH JSON OUTPUT*
-
-
-
-
-
-
-
-
-
-
-
-
-
