@@ -45,7 +45,7 @@
 ### **Update Leaderboard**
 ##### *Tests that you can update the leaderboard via only internal calls and not external (via tuffix-vm)*
 ##### `http POST http://tuffix-vm/leaderboard/update username=<username> score=<score>` *SHOULD RETURN 404*
-##### `http POST http://localhost:5200/leaderboard/update username=<username> score=<score>` *SHOULD RETURN 200 OK WITH JSON OUTPUT*
+##### `http POST http://localhost:5400/leaderboard/update username=<username> score=<score>` *SHOULD RETURN 200 OK WITH JSON OUTPUT*
 
 
 
