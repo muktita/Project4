@@ -40,7 +40,7 @@ def update_leaderboard(data:LeaderboardGame):
         logger.logging(e)
         return abort(500)
 
-    return {user: avg}
+    return {'username': user, 'average': avg}
 
 
 

@@ -10,11 +10,11 @@
 ##### copy 'wordleauth' into your nginx directory (/etc/nginx/sites-enabled/)
 ##### restart nginx `sudo service nginx restart`
 ##### navigate to project directory
-##### to setup file structures for litefs database replication, run `python3 setup.py` *if setup.py fails, manually delete the folder /database/dbs* 
-###### *Make sure that redis is not running.  you can check with the command `pgrep redis`*
+##### to setup file structures for litefs database replication, run `python3 setup.py`  *if setup.py fails, manually delete the folder /database/dbs* 
+###### *Make sure you have redis installed and it's not running.  you can check with the command `pgrep redis`*
 ##### run `foreman start` before populating datbases
-##### setup the databases by running `python3 setupDB.py`  *use `setupDB.py -p` to populate the database*
-###### *Note it resets the redis db as well*
+##### setup the databases by running `python3 setupDB.py`  *use `setupDB.py -p` to populate the database.  Note it resets the redis db as well*
+###### *if the project fails to start, delete the dbs folder and run setup again. Check again that redis is not installed.*
 
 ---
 
