@@ -7,7 +7,7 @@
 ##### Jarrod Leong
 
 ## **Initializing Database & Start Service:**
-##### copy 'wordleauth' into your nginx directory (/etc/nginx/sites-enabled/)
+##### copy 'src/nginx.config' into your nginx directory (/etc/nginx/sites-enabled/)
 ##### restart nginx `sudo service nginx restart`
 ##### navigate to project directory
 ##### to setup file structures for litefs database replication, run `python3 setup.py`  *if setup.py fails, manually delete the folder /database/dbs* 
