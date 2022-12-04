@@ -14,7 +14,7 @@
 ###### *Make sure you have redis installed and it's not running.  you can check with the command `pgrep redis`*
 ##### run `foreman start` before populating datbases
 ##### setup the databases by running `python3 setupDB.py`  *use `setupDB.py -p` to populate the database.  Note it resets the redis db as well*
-###### *if the project fails to start, delete the dbs folder and run setup again. Check again that redis is not running.*
+###### *if the project fails to start, delete the dbs folder and run setup again. Check again that redis is not running.  Litefs is included but if the replication services are failing, you may need to redownload Litefs and add it into /src/database/ and try again.*
 
 ---
 
