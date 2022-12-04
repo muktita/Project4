@@ -26,8 +26,7 @@ server {
                 auth_request /auth;
                 proxy_pass http://backend/game/;
                 proxy_pass_request_headers on;
-                proxy_pass_request_body on;
-                
+                proxy_pass_request_body on;   
         }
 
 
