@@ -41,5 +41,10 @@ server {
                 proxy_set_header X-Original-Host $host;
         }
 
+        location = /webhook {
+        auth_basic              off;
+        proxy_pass              http://backend;
+        }
+
 
 }
