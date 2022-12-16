@@ -1,14 +1,18 @@
-# 449wordleproject3
+# CPSC449 Project 4
 
 ### Group Members:
-##### Fenil Ketan Bhimani
-##### Parth Sharma
+##### Clay Golan
+##### Muktita Kim
 ##### Rakesh Singh
-##### Jarrod Leong
+##### Clemente Solorio
 
 ## **Initializing Database & Start Service:**
 ##### copy 'wordleauth' into your nginx directory (/etc/nginx/sites-enabled/)
 ##### restart nginx `sudo service nginx restart`
+##### install ngrok `curl -s https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz | tar xzf - -C $HOME/.local/bin` and forward to port `5000`
+##### install Ruby `sudo apt update` and `sudo apt install --yes ruby-sinatra`
+##### install RQ `python3 -m pip install rq`
+##### instsall HTTPX `python3 -m pip install httpx`
 ##### navigate to project directory
 ##### to setup file structures for litefs database replication, run `python3 setup.py`  *if setup.py fails, manually delete the folder /database/dbs* 
 ###### *Make sure you have redis installed and it's not running.  you can check with the command `pgrep redis`*
