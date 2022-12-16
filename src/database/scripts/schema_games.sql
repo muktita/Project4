@@ -18,8 +18,15 @@ CREATE TABLE guesses(
     guess_num INTEGER NOT NULL,
     FOREIGN KEY(game_id) REFERENCES games(game_id)
 );
+DROP TABLE IF EXISTS callbackURLs;
+CREATE TABLE callbackURLs(
+    url TEXT NOT NULL,
+    client TEXT NOT NULL,
+    PRIMARY KEY(url)
+);
 
 CREATE INDEX games_idx ON games(finished, user_id COLLATE NOCASE);
 CREATE INDEX guess_idx ON guesses(game_id, guess_num);
+CREATE INDEX callbackURLs_idx ON callbackURLs(url, client);
 
 COMMIT;
