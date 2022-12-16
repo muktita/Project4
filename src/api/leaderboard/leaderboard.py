@@ -1,7 +1,12 @@
+import socket
+import time
+import httpx
 from quart import Quart, request, Blueprint, abort, g
 import random
 import dataclasses
 import uuid
+
+import redis
 from api.util.util import CORRECT_WORD_BANK, parse_game, process_guess, validate_guess
 from api.util.util import _get_redis
 from api.util.Classes import Guess, Game, User, LeaderboardGame
@@ -59,3 +64,35 @@ def get_leaderboard():
         abort(500)
 
     return {'top10': top10}
+
+@app_leaderboard.before_serving
+def register_callback():
+    hostname = socket.getfqdn()
+    # port = os.environ["PORT"] # unnused for now? not sure where it would be useful
+    callbackURL = f"http://{hostname}/leaderboard/payload"
+
+    data = {"url": callbackURL, "client": "leaderboard"}
+
+    try:
+        r = httpx.post(f"http://{hostname}/webhook", json=data)
+        r.raise_for_status()
+    except httpx.HTTPStatusError as exc:
+        app_leaderboard.logger.critical(exc)
+        app_leaderboard.logger.critical("Failure to Register")
+        if exc.response.status_code == 502:
+            app_leaderboard.logger.critical("Retrying again in 1 second")
+            time.sleep(1)
+            register_callback()
+        else:
+            app_leaderboard.logger.critical(
+                f"unknown error found. response code: {exc.response.status_code}"
+            )
+            return
+        return
+    except Exception as e:
+        app_leaderboard.logger.critical(e)
+        app_leaderboard.logger.critical("Failure to Register")
+        return
+
+    app_leaderboard.logger.info("Successfully Registered Leaderboard Service")
+    return

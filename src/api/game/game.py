@@ -1,3 +1,4 @@
+import sqlite3
 from quart import Quart, request, Blueprint, abort, g
 import random
 import dataclasses
@@ -151,7 +152,29 @@ async def make_guess(data:Guess, headers:User):
     
     return result
 
+@app_create.route("/webhook", methods=["POST"])
+async def webhook():
+    data = await request.get_json()
+    if not data:
+        app_create.logger.error("no data")
+        return {"success": "false"}, 400
+    app_create.logger.info(data)
+    url = data["url"]
+    client = data["client"]
 
+    primary, replica = await _get_db()
+
+    query = f"INSERT INTO callbackURLs (url, client) VALUES ('{url}', '{client}')"
+    try:
+        await primary.execute(query)
+    except sqlite3.OperationalError:
+        raise sqlite3.OperationalError
+    except sqlite3.IntegrityError:
+        return {"success": "true"}, 200
+    except Exception as e:
+        raise e
+
+    return {"success": "true"}, 200
     
 
 
